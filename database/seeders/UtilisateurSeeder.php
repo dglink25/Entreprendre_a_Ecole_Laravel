@@ -1,0 +1,23 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
+class UtilisateurSeeder extends Seeder
+{
+    public function run(): void
+    {
+
+        // On crée le nouvel utilisateur
+        DB::table('users')->insert([
+            'name' => 'Administrateur module EAE',
+            'email' => 'admin_eae@gmail.com',
+            'password' => Hash::make('12345678'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+}
