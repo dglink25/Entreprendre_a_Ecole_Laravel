@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Module extends Model
-{
+class Module extends Model{
     protected $fillable = [
         'code', 'nom', 'courte_description', 'longue_description'
     ];
+
+    protected $table = 'statistiques_modules';
 
     public function statistiques()
     {
