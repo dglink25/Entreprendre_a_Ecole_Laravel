@@ -222,8 +222,7 @@
                 <img src="{{ asset('insti.png') }}" alt="Logo droite" class="img-fluid">
             </div>
         </header>
-
-        <!-- Navigation -->
+        
         <nav class="navbar navbar-expand-lg custom-navbar">
             <div class="container">
                 <!-- Bouton de menu (mobile) -->
@@ -281,7 +280,6 @@
             </div>
         </nav>
         
-        <!-- Logo droit qui couvre toute la hauteur (uniquement sur desktop) -->
         <div class="full-height-logo logo-right d-none d-lg-flex">
             <img src="{{ asset('insti.png') }}" alt="Logo droite" class="img-fluid">
         </div>

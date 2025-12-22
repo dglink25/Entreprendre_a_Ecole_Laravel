@@ -8,10 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UtilisateurSeeder extends Seeder
 {
-    public function run(): void
-    {
-
-        // On crée le nouvel utilisateur
+    public function run(): void{
         DB::table('users')->insert([
             'name' => 'Administrateur module EAE',
             'email' => 'admin_eae@gmail.com',
