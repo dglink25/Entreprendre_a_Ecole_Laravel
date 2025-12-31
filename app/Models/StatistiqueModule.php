@@ -9,6 +9,8 @@ class StatistiqueModule extends Model{
         'module_id', 'nom', 'nombre', 'icons', 'description'
     ];
 
+    protected $table = 'statistiques_modules';
+
     public function module(){
         return $this->belongsTo(Module::class);
     }

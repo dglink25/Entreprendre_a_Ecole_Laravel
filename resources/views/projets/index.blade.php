@@ -1,4 +1,8 @@
-<x-app-layout>
+@extends('layouts.app')
+
+@section('title', 'Créer un Domaine - Module EAE')
+
+@section('content')
 
     <x-slot name="header">
         <div class="flex items-center justify-between">
@@ -70,4 +74,4 @@
 
     </div>
 
-</x-app-layout>
+@endsection

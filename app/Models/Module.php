@@ -9,7 +9,7 @@ class Module extends Model{
         'code', 'nom', 'courte_description', 'longue_description'
     ];
 
-    protected $table = 'statistiques_modules';
+    protected $table = 'modules';
 
     public function statistiques()
     {

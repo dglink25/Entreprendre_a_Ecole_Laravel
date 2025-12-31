@@ -16,7 +16,8 @@ class ProjetController extends Controller{
 
             return view('projets.index', compact('projets'));
 
-        } catch (\Exception $e) {
+        } 
+        catch (\Exception $e) {
             Log::error("Erreur INDEX Projet: " . $e->getMessage());
 
             return back()->with('error', 'Impossible d’afficher les projets.');

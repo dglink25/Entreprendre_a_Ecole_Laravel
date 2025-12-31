@@ -12,7 +12,7 @@ class DomaineController extends Controller{
 
     public function index(){
         try {
-            $domaines = Domaine::where('module_id', $this->moduleId)->get();
+            $domaines = Domaine::where('module_id', $this->moduleId)->paginate(9);
 
             return view('domaines.index', compact('domaines'));
 

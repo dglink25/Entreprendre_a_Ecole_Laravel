@@ -1,4 +1,8 @@
-<x-app-layout>
+@extends('layouts.app')
+
+@section('title', 'Créer un Domaine - Module EAE')
+
+@section('content')
 
     <x-slot name="header">
         <h2 class="font-semibold text-2xl text-gray-800">
@@ -57,5 +61,4 @@
 
         </div>
     </div>
-
-</x-app-layout>
+@endsection
