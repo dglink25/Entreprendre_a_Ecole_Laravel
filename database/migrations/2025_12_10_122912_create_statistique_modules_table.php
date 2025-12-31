@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('module_id')->constrained('modules')->cascadeOnDelete();
             $table->string('nom');
             $table->integer('nombre')->default(0);
-            $table->string('icons')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
         });
