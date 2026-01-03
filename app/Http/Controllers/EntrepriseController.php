@@ -8,31 +8,31 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
-class ProjetController extends Controller{
+class EntrepriseController extends Controller{
     /**
-     * Affiche la liste des projets.
+     * Affiche la liste des entreprises.
      */
-    
     public function index(){
         try {
             // Récupérer le module EAE
             $moduleEae = Module::where('code', 'eae')->firstOrFail();
 
-            // Récupérer tous les projets du module EAE
-            $projets = Category::where('module_id', $moduleEae->id)->where('type', 'projet')->get();
+            // Récupérer toutes les entreprises du module EAE
+            $entreprises = Category::where('module_id', $moduleEae->id)->where('type', 'entreprise')->get();
 
-            // Retourner la vue avec les projets
-            return view('projets.index', compact('projets'));
+            // Retourner la vue avec les entreprises
+            return view('entreprises.index', compact('entreprises'));
 
-        } catch (\Exception $e) {
+        } 
+        catch (\Exception $e) {
             // Loguer l'erreur et retourner un message d'erreur
-            Log::error("Erreur Index Projets : " . $e->getMessage());
-            return back()->with('error', 'Impossible de charger les projets.');
+            Log::error("Erreur Index Entreprises : " . $e->getMessage());
+            return back()->with('error', 'Impossible de charger les entreprises.');
         }
     }
 
     /**
-     * Page de création d'un nouveau projet.
+     * Page de création d'une nouvelle entreprise.
      */
     public function create(){
         try {
@@ -43,18 +43,18 @@ class ProjetController extends Controller{
             $domaines = Category::where('module_id', $moduleEae->id)->where('type', 'domaine')->get();
 
             // Retourner la vue avec le module EAE et les domaines
-            return view('projets.create', compact('moduleEae', 'domaines'));
+            return view('entreprises.create', compact('moduleEae', 'domaines'));
 
         } 
         catch (\Exception $e) {
             // Loguer l'erreur et retourner un message d'erreur
-            Log::error("Erreur Create Projet : " . $e->getMessage());
+            Log::error("Erreur Create Entreprise : " . $e->getMessage());
             return back()->with('error', 'Impossible d’accéder à la page de création.');
         }
     }
 
     /**
-     * Enregistre un nouveau projet.
+     * Enregistre une nouvelle entreprise.
      */
     public function store(Request $request){
         try {
@@ -62,29 +62,25 @@ class ProjetController extends Controller{
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'description' => 'nullable|string|max:1000',
-                'date_debut'=> 'required',
-                'date_fin'=> 'required',
                 'domaine_id' => 'required|exists:categories,id',
             ]);
 
             // Récupérer le module EAE
             $moduleEae = Module::where('code', 'eae')->firstOrFail();
 
-            // Créer le nouveau projet
-            $projet = new Category([
+            // Créer la nouvelle entreprise
+            $entreprise = new Category([
                 'module_id' => $moduleEae->id,
-                'type' => 'projet',
+                'type' => 'entreprise',
                 'name' => $validated['name'],
                 'description' => $validated['description'],
-                'date_fin'    => $validated['date_debut'],
-                'date_fin'    => $validated['date_fin'],
                 'parent1_id' => $validated['domaine_id'], // Le domaine est le parent1
             ]);
-            $projet->save();
+            $entreprise->save();
 
             // Message de succès
-            return redirect()->route('projets.index')
-                ->with('success', 'Projet ajouté avec succès.');
+            return redirect()->route('entreprises.index')
+                ->with('success', 'Entreprise ajoutée avec succès.');
 
         } 
         catch (ValidationException $e) {
@@ -96,40 +92,40 @@ class ProjetController extends Controller{
         } 
         catch (\Exception $e) {
             // Loguer l'erreur et retourner un message d'erreur
-            Log::error("Erreur Store Projet : " . $e->getMessage());
+            Log::error("Erreur Store Entreprise : " . $e->getMessage());
             return back()->with('error', 'Une erreur est survenue. Réessayez.');
         }
     }
 
     /**
-     * Page d’édition d’un projet.
+     * Page d’édition d’une entreprise.
      */
     public function edit($id){
         try {
-            // Récupérer le projet
-            $projet = Category::findOrFail($id);
+            // Récupérer l'entreprise
+            $entreprise = Category::findOrFail($id);
 
-            // Vérifier que le projet appartient au module EAE
-            if ($projet->module->code !== 'eae' || $projet->type !== 'projet') {
+            // Vérifier que l'entreprise appartient au module EAE
+            if ($entreprise->module->code !== 'eae' || $entreprise->type !== 'entreprise') {
                 abort(403, 'Accès refusé.');
             }
 
             // Récupérer les domaines pour le formulaire
-            $domaines = Category::where('module_id', $projet->module_id)->where('type', 'domaine')->get();
+            $domaines = Category::where('module_id', $entreprise->module_id)->where('type', 'domaine')->get();
 
-            // Retourner la vue avec le projet et les domaines
-            return view('projets.edit', compact('projet', 'domaines'));
+            // Retourner la vue avec l'entreprise et les domaines
+            return view('entreprises.edit', compact('entreprise', 'domaines'));
 
         } 
         catch (\Exception $e) {
             // Loguer l'erreur et retourner un message d'erreur
-            Log::error("Erreur Edit Projet : " . $e->getMessage());
+            Log::error("Erreur Edit Entreprise : " . $e->getMessage());
             return back()->with('error', 'Impossible d’ouvrir la page d’édition.');
         }
     }
 
     /**
-     * Mise à jour d’un projet.
+     * Mise à jour d’une entreprise.
      */
     public function update(Request $request, $id){
         try {
@@ -140,24 +136,24 @@ class ProjetController extends Controller{
                 'domaine_id' => 'required|exists:categories,id',
             ]);
 
-            // Récupérer le projet
-            $projet = Category::findOrFail($id);
+            // Récupérer l'entreprise
+            $entreprise = Category::findOrFail($id);
 
-            // Vérifier que le projet appartient au module EAE
-            if ($projet->module->code !== 'eae' || $projet->type !== 'projet') {
+            // Vérifier que l'entreprise appartient au module EAE
+            if ($entreprise->module->code !== 'eae' || $entreprise->type !== 'entreprise') {
                 abort(403, 'Accès refusé.');
             }
 
-            // Mettre à jour le projet
-            $projet->update([
+            // Mettre à jour l'entreprise
+            $entreprise->update([
                 'name' => $validated['name'],
                 'description' => $validated['description'],
                 'parent1_id' => $validated['domaine_id'], // Le domaine est le parent1
             ]);
 
             // Message de succès
-            return redirect()->route('projets.index')
-                ->with('success', 'Projet modifié avec succès.');
+            return redirect()->route('entreprises.index')
+                ->with('success', 'Entreprise modifiée avec succès.');
 
         } 
         catch (ValidationException $e) {
@@ -169,36 +165,36 @@ class ProjetController extends Controller{
         } 
         catch (\Exception $e) {
             // Loguer l'erreur et retourner un message d'erreur
-            Log::error("Erreur Update Projet : " . $e->getMessage());
+            Log::error("Erreur Update Entreprise : " . $e->getMessage());
             return back()->with('error', 'Erreur lors de la mise à jour.');
         }
     }
 
     /**
-     * Suppression d’un projet.
+     * Suppression d’une entreprise.
      */
     public function destroy($id){
         try {
-            // Récupérer le projet
-            $projet = Category::findOrFail($id);
+            // Récupérer l'entreprise
+            $entreprise = Category::findOrFail($id);
 
-            // Vérifier que le projet appartient au module EAE
-            if ($projet->module->code !== 'eae' || $projet->type !== 'projet') {
+            // Vérifier que l'entreprise appartient au module EAE
+            if ($entreprise->module->code !== 'eae' || $entreprise->type !== 'entreprise') {
                 abort(403, 'Accès refusé.');
             }
 
-            // Supprimer le projet
-            $projet->delete();
+            // Supprimer l'entreprise
+            $entreprise->delete();
 
             // Message de succès
-            return redirect()->route('projets.index')
-                ->with('success', 'Projet supprimé avec succès.');
+            return redirect()->route('entreprises.index')
+                ->with('success', 'Entreprise supprimée avec succès.');
 
         } 
         catch (\Exception $e) {
             // Loguer l'erreur et retourner un message d'erreur
-            Log::error("Erreur Delete Projet : " . $e->getMessage());
-            return back()->with('error', 'Impossible de supprimer ce projet.');
+            Log::error("Erreur Delete Entreprise : " . $e->getMessage());
+            return back()->with('error', 'Impossible de supprimer cette entreprise.');
         }
     }
 }

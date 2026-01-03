@@ -746,15 +746,15 @@
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                                     <li>
-                                        <a class="dropdown-item {{ request()->routeIs('module.*') ? 'active' : '' }}" 
-                                           href="{{ route('module.show') }}">
-                                            <i class="fas fa-cubes"></i> Module EaE
-                                        </a>
-                                    </li>
-                                    <li>
                                         <a class="dropdown-item {{ request()->routeIs('domaines.*') ? 'active' : '' }}" 
                                            href="{{ route('domaines.index') }}">
                                             <i class="fas fa-layer-group"></i> Domaines
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('entreprises*') ? 'active' : '' }}" 
+                                           href="{{ route('entreprises.index') }}">
+                                            <i class="fas fa-cubes"></i> Entreprises
                                         </a>
                                     </li>
                                     <li>

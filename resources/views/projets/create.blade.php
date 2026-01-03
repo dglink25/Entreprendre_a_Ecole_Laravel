@@ -32,6 +32,16 @@
                     @error('description') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
                 </div>
 
+                <div class="form-group">
+                    <label for="domaine_id">Domaine</label>
+                    <select name="domaine_id" id="domaine_id" class="form-control">
+                        <option value="">Selectionner une option</option>
+                        @foreach ($domaines as $domaine)
+                        <option value="{{ $domaine->id }}">{{ $domaine->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div>
                     <label class="font-semibold text-gray-700">Date de début</label>
                     <input type="date" name="date_debut" class="mt-1 w-full border rounded-lg px-4 py-2"

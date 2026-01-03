@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\DomaineController;
+use App\Http\Controllers\EntrepriseController;
+use App\Http\Controllers\PartenaireController;
 use App\Http\Controllers\ProjetController;
 
 Route::get('/', function () {
@@ -63,6 +65,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/module/edit', [ModuleController::class, 'edit'])->name('module.edit');
     Route::put('/module/update', [ModuleController::class, 'update'])->name('module.update');
     Route::delete('/module/delete', [ModuleController::class, 'destroy'])->name('module.delete');
+
+    // Entreprises
+    Route::get('/entreprises', [EntrepriseController::class, 'index'])->name('entreprises.index');
+    Route::get('/entreprises', [EntrepriseController::class, 'create'])->name('entreprises.create');
+    Route::post('/entreprises', [EntrepriseController::class, 'store'])->name('entreprises.store');
+    Route::get('/entreprises/edit', [EntrepriseController::class, 'edit'])->name('entreprises.edit');
+    Route::put('/entreprises/update', [EntrepriseController::class, 'update'])->name('entreprises.update');
+    Route::delete('/entreprises/delete', [EntrepriseController::class, 'destroy'])->name('entreprises.delete');
 
     // DOMAINES
     Route::resource('domaines', DomaineController::class);
