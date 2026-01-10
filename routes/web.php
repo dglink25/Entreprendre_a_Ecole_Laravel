@@ -8,57 +8,50 @@ use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\PartenaireController;
 use App\Http\Controllers\ProjetController;
 
+// Routes publiques
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
 Route::get('/annonces', function () {
-    return view('annonces_valide'); // Correspond à resources/views/annonces_valide.blade.php
+    return view('annonces_valide');
 })->name('annonces');
 
 Route::get('/annonces_plus', function () {
-    return view('annonces_plus'); // Correspond à resources/views/annonces_plus.blade.php
+    return view('annonces_plus');
 })->name('annonces_plus');
 
-Route::get('/entreprises', function () {
-    return view('Entreprise_Cree'); // Correspond à resources/views/entreprise_Cree.blade.php
-})->name('entreprises');
-
-Route::get('/entreprises_lirePlus', function () {
-    return view('entreprisecree_LirePlus'); // Correspond à resources/views/Entreprisecree_LirePlus.blade.php
-})->name('entreprises_lirePlus');
-
 Route::get('/galeries', function () {
-    return view('album'); // Correspond à resources/views/album.blade.php
+    return view('album');
 })->name('galeries');
 
 Route::get('/sous_album', function () {
-    return view('sous-album'); // Correspond à resources/views/sous-album.blade.php
+    return view('sous-album');
 })->name('sous_album');
 
 Route::get('/sous-album_sous', function () {
-    return view('sous-album_sous'); // Correspond à resources/views/sous-album_sous.blade.php
+    return view('sous-album_sous');
 })->name('sous-album_sous');
 
-Route::get('/partenaires', function () {
-    return view('index'); // Correspond à resources/views/index.blade.php
-})->name('partenaires');
-
 Route::get('/contacts', function () {
-    return view('contact'); // Correspond à resources/views/contact.blade.php
+    return view('contact');
 })->name('contacts');
 
+// Route entreprise publique (séparée de l'admin)
+Route::get('/entreprises', [EntrepriseController::class, 'publicIndex'])->name('entreprises.public');
+Route::get('/entreprises/{entreprise}', [EntrepriseController::class, 'show'])->name('entreprises.show');
+
+// Dashboard et authentification
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::resource('partenaires', PartenaireController::class);
+    
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::middleware(['auth'])->group(function () {
 
     // MODULE EAE
     Route::get('/module', [ModuleController::class, 'show'])->name('module.show');
@@ -66,20 +59,21 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/module/update', [ModuleController::class, 'update'])->name('module.update');
     Route::delete('/module/delete', [ModuleController::class, 'destroy'])->name('module.delete');
 
-    // Entreprises
-    Route::get('/entreprises', [EntrepriseController::class, 'index'])->name('entreprises.index');
-    Route::get('/entreprises', [EntrepriseController::class, 'create'])->name('entreprises.create');
-    Route::post('/entreprises', [EntrepriseController::class, 'store'])->name('entreprises.store');
-    Route::get('/entreprises/edit', [EntrepriseController::class, 'edit'])->name('entreprises.edit');
-    Route::put('/entreprises/update', [EntrepriseController::class, 'update'])->name('entreprises.update');
-    Route::delete('/entreprises/delete', [EntrepriseController::class, 'destroy'])->name('entreprises.delete');
-
-    // DOMAINES
+    // DOMAINES (resource avec toutes les routes CRUD)
     Route::resource('domaines', DomaineController::class);
 
-    // PROJETS
+    // PROJETS (resource avec toutes les routes CRUD)
     Route::resource('projets', ProjetController::class);
-});
 
+    // ENTREPRISES (admin seulement)
+    Route::prefix('admin')->group(function () {
+        Route::get('/entreprises', [EntrepriseController::class, 'index'])->name('entreprises.index');
+        Route::get('/entreprises/create', [EntrepriseController::class, 'create'])->name('entreprises.create');
+        Route::post('/entreprises', [EntrepriseController::class, 'store'])->name('entreprises.store');
+        Route::get('/entreprises/{entreprise}/edit', [EntrepriseController::class, 'edit'])->name('entreprises.edit');
+        Route::put('/entreprises/{entreprise}', [EntrepriseController::class, 'update'])->name('entreprises.update');
+        Route::delete('/entreprises/{entreprise}', [EntrepriseController::class, 'destroy'])->name('entreprises.destroy');
+    });
+});
 
 require __DIR__.'/auth.php';

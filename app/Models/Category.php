@@ -31,6 +31,7 @@ class Category extends Model
         'diplome',
         'date_debut',
         'date_fin',
+        'is_active',
     ];
 
     // Relation avec le module

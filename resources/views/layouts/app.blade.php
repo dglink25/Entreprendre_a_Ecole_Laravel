@@ -705,7 +705,7 @@
                         
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="programmeDropdown" role="button" 
-                               data-bs-toggle="dropdown" aria-expanded="false">
+                            data-bs-toggle="dropdown" aria-expanded="false">
                                 PROGRAMME EaE
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="programmeDropdown">
@@ -725,9 +725,13 @@
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('annonces') ? 'active' : '' }}" href="{{ route('annonces') }}">ACTUALITES</a>
                         </li>
+                        
+                        <!-- CORRECTION ICI : utiliser la route publique -->
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('entreprises') ? 'active' : '' }}" href="{{ route('entreprises') }}">ENTREPRISES</a>
+                            <a class="nav-link {{ request()->routeIs('entreprises.public') ? 'active' : '' }}" 
+                            href="{{ route('entreprises.public') }}">ENTREPRISES</a>
                         </li>
+                        
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('galeries') ? 'active' : '' }}" href="{{ route('galeries') }}">GALERIES</a>
                         </li>
@@ -741,26 +745,33 @@
                         @auth
                             <li class="nav-item dropdown admin-menu">
                                 <a class="nav-link dropdown-toggle admin-notification" href="#" id="adminDropdown" 
-                                   role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-cog me-1"></i>ADMIN
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('domaines.*') ? 'active' : '' }}" 
-                                           href="{{ route('domaines.index') }}">
+                                        href="{{ route('domaines.index') }}">
                                             <i class="fas fa-layer-group"></i> Domaines
                                         </a>
                                     </li>
+                                    <!-- CORRECTION ICI : route admin -->
                                     <li>
-                                        <a class="dropdown-item {{ request()->routeIs('entreprises*') ? 'active' : '' }}" 
-                                           href="{{ route('entreprises.index') }}">
+                                        <a class="dropdown-item {{ request()->routeIs('entreprises.index') ? 'active' : '' }}" 
+                                        href="{{ route('entreprises.index') }}">
                                             <i class="fas fa-cubes"></i> Entreprises
                                         </a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('projets.*') ? 'active' : '' }}" 
-                                           href="{{ route('projets.index') }}">
+                                        href="{{ route('projets.index') }}">
                                             <i class="fas fa-project-diagram"></i> Projets
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('partenaires.index') ? 'active' : '' }}" 
+                                        href="{{ route('partenaires.index') }}">
+                                            <i class="fas fa-cubes"></i> Partenaires
                                         </a>
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
