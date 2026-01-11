@@ -11,7 +11,7 @@ class CreateUtilisateursTable extends Migration
         Schema::create('utilisateurs', function (Blueprint $table) {
             $table->id(); // Identifiant unique
             $table->string('nom'); // Nom complet
-            $table->string('email')->unique(); // Email unique
+            $table->string('email', 191)->unique(); // Email unique
             $table->string('mot_de_passe'); // Mot de passe
             $table->timestamp('date_inscription')->useCurrent(); // Date d'inscription
             $table->timestamp('dernière_connexion')->nullable(); // Dernière connexion

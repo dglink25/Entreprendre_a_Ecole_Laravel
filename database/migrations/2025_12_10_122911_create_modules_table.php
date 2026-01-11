@@ -15,7 +15,7 @@ return new class extends Migration
 
         Schema::create('modules', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
+            $table->string('code',191)->unique();
             $table->string('nom');
             $table->text('courte_description')->nullable();
             $table->longText('longue_description')->nullable();

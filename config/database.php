@@ -43,6 +43,11 @@ return [
         ],
 
         'mysql' => [
+            // ...
+            'engine' => 'InnoDB',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            // ...
             'driver' => 'mysql',
             'url' => env('DB_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
