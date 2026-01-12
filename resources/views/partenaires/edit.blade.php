@@ -55,12 +55,6 @@
                                                     name="type" 
                                                     required>
                                                 <option value="">Sélectionnez un type</option>
-                                                <option value="entreprise_incube" {{ (old('type', $partenaire->meta_data['type'] ?? '') == 'entreprise_incube') ? 'selected' : '' }}>
-                                                    Entreprise incubée
-                                                </option>
-                                                <option value="entreprise_alumni" {{ (old('type', $partenaire->meta_data['type'] ?? '') == 'entreprise_alumni') ? 'selected' : '' }}>
-                                                    Entreprise des Alumni
-                                                </option>
                                                 <option value="partenaire_strategique" {{ (old('type', $partenaire->meta_data['type'] ?? '') == 'partenaire_strategique') ? 'selected' : '' }}>
                                                     Partenaire stratégique
                                                 </option>
@@ -137,7 +131,7 @@
                                                    id="phone" 
                                                    name="phone" 
                                                    value="{{ old('phone', $partenaire->meta_data['phone'] ?? '') }}"
-                                                   placeholder="+XX XXX XXX XXX">
+                                                   placeholder="+229 XX XX XX XX XX">
                                             @error('phone')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
