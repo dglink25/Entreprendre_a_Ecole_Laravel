@@ -62,6 +62,39 @@ class PartenaireController extends Controller{
         }
     }
 
+    public function show($id)
+{
+    try {
+        $partenaire = Category::with('parent1')->findOrFail($id);
+        
+        if ($partenaire->type !== 'partenaire' || !$partenaire->is_active) {
+            abort(404);
+        }
+
+        // Récupérer l'entreprise parente avec ses détails
+        $entreprise = $partenaire->parent1;
+        
+        // Récupérer des partenaires similaires (même type)
+        $similarPartenaires = Category::where('module_id', $partenaire->module_id)
+            ->where('type', 'partenaire')
+            ->where('is_active', true)
+            ->where('id', '!=', $id)
+            ->where(function($query) use ($partenaire) {
+                if ($partenaire->meta_data['type'] ?? false) {
+                    $query->where('meta_data->type', $partenaire->meta_data['type']);
+                }
+            })
+            ->limit(3)
+            ->get();
+
+        return view('partenaires.show', compact('partenaire', 'entreprise', 'similarPartenaires'));
+
+    } catch (\Exception $e) {
+        Log::error("Erreur Show Partenaire: " . $e->getMessage());
+        return back()->with('error', 'Partenaire non trouvé.');
+    }
+}
+
     public function store(Request $request) {
         try {
             // Validation
@@ -305,32 +338,7 @@ class PartenaireController extends Controller{
     /**
      * Afficher les détails d'un partenaire
      */
-    public function show($id){
-        try {
-            $partenaire = Category::with('parent1')->findOrFail($id);
-            
-            if ($partenaire->type !== 'partenaire' || !$partenaire->is_active) {
-                abort(404);
-            }
-            
-            // Récupérer des partenaires similaires
-            $similarPartenaires = Category::where('module_id', $partenaire->module_id)
-                ->where('type', 'partenaire')
-                ->where('is_active', true)
-                ->where('id', '!=', $id)
-                ->when($partenaire->meta_data['type'] ?? null, function($query) use ($partenaire) {
-                    return $query->where('meta_data->type', $partenaire->meta_data['type']);
-                })
-                ->limit(4)
-                ->get();
-            
-            return view('partenaires.show', compact('partenaire', 'similarPartenaires'));
 
-        } catch (\Exception $e) {
-            Log::error("Erreur Show Partenaire : " . $e->getMessage());
-            return back()->with('error', 'Impossible d\'afficher les détails du partenaire.');
-        }
-    }
     
     /**
      * Prévisualisation rapide (pour modal AJAX)

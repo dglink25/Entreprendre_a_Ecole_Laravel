@@ -860,7 +860,7 @@
                 </div>
             </div>
             <div class="text-center mt-4 pt-3 border-top border-white border-opacity-25">
-                <p class="mb-0">INSTI-UNSTIM © 2025</p>
+                <p class="mb-0">INSTI-UNSTIM © 2026</p>
             </div>
         </div>
     </footer>

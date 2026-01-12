@@ -3,397 +3,938 @@
 @section('title', 'Nos Partenaires - Programme Entreprendre à l\'École')
 
 @section('content')
-<!-- Hero Section -->
-<section class="hero-banner position-relative py-5">
-    <div class="hero-image-container">
-        <img src="{{ asset('images/DSC_0196 1.png') }}" class="hero-image" alt="Nos partenaires">
-        <div class="hero-overlay"></div>
-    </div>
+<style>
+    /* Styles spécifiques pour la page partenaires */
+    .gallery-header {
+        position: relative;
+        height: 60vh;
+        min-height: 400px;
+        max-height: 600px;
+        overflow: hidden;
+        margin-top: -1px;
+        animation: headerReveal 1s ease-out;
+    }
     
-    <div class="hero-content container position-relative py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 text-center text-white">
-                <div class="hero-badge animate__animated animate__fadeInDown">
-                    <span class="badge bg-primary bg-opacity-25 text-white px-4 py-2 rounded-pill">
-                        <i class="fas fa-handshake me-2"></i>Partenariats
-                    </span>
-                </div>
-                <h1 class="display-4 fw-bold mt-4 animate__animated animate__fadeInUp animate__delay-1s">
-                    NOS PARTENAIRES
-                </h1>
-                <p class="lead mb-4 animate__animated animate__fadeInUp animate__delay-2s">
-                    Découvrez les organisations qui soutiennent et accompagnent nos entreprises innovantes.
-                </p>
-                <div class="hero-stats animate__animated animate__fadeInUp animate__delay-3s">
-                    <div class="row justify-content-center">
-                        <div class="col-auto">
-                           
-                        </div>
-                        <div class="col-auto">
-                           
-                        </div>
-                        <div class="col-auto">
-                            
-                        </div>
-                        <div class="col-auto">
-                           
-                        </div>
-                    </div>
-                </div>
-            </div>
+    @keyframes headerReveal {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .gallery-header .header-image {
+        height: 100%;
+        width: 100%;
+    }
+    
+    .gallery-header .header-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.6);
+        animation: zoomIn 30s ease-in-out infinite alternate;
+    }
+    
+    @keyframes zoomIn {
+        0% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(1.1);
+        }
+    }
+    
+    .carousel-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(13, 66, 147, 0.3), rgba(26, 86, 219, 0.2));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+    }
+    
+    .carousel_title {
+        text-align: center;
+        color: white;
+        padding: 2rem;
+        max-width: 800px;
+        animation: titleSlideUp 1s ease-out 0.3s both;
+    }
+    
+    @keyframes titleSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .carousel_title h1 {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .carousel_title .subtitle {
+        font-size: clamp(1rem, 2vw, 1.3rem);
+        font-weight: 300;
+        letter-spacing: 2px;
+        opacity: 0.9;
+    }
+    
+    .container00 {
+        display: flex;
+        gap: clamp(20px, 4vw, 60px);
+        max-width: 1400px;
+        margin: clamp(40px, 6vw, 80px) auto;
+        padding: 0 clamp(15px, 4vw, 40px);
+        animation: containerFadeIn 0.8s ease-out 0.5s both;
+    }
+    
+    @keyframes containerFadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    .main-content {
+        flex: 1;
+        min-width: 0;
+        width: 100%;
+        margin: 0 auto;
+    }
+    
+    /* Search and Filters Section */
+    .search-filter-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        margin-bottom: clamp(30px, 4vw, 50px);
+        padding: clamp(20px, 3vw, 30px);
+        animation: fadeInUp 0.6s ease-out 0.3s both;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .filter-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: clamp(10px, 2vw, 15px);
+        margin-bottom: clamp(15px, 2vw, 25px);
+    }
+    
+    .filter-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .filter-dropdown .btn {
+        background: white;
+        border: 2px solid #e2e8f0;
+        color: #64748b;
+        padding: clamp(10px, 1.5vw, 14px) clamp(15px, 2vw, 25px);
+        border-radius: 12px;
+        font-weight: 500;
+        transition: all 0.4s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+    
+    .filter-dropdown .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #0D4293, #1a56db);
+        transition: left 0.4s ease-out;
+        z-index: -1;
+    }
+    
+    .filter-dropdown .btn:hover {
+        border-color: #0D4293;
+        color: white;
+    }
+    
+    .filter-dropdown .btn:hover::before {
+        left: 0;
+    }
+    
+    .filter-dropdown .btn:hover i {
+        color: white;
+    }
+    
+    .filter-dropdown .btn i {
+        color: #64748b;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        padding: clamp(15px, 2vw, 20px);
+        min-width: 250px;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease-out;
+    }
+    
+    .filter-dropdown:hover .filter-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+    
+    .filter-check {
+        accent-color: #0D4293;
+        margin-right: 10px;
+    }
+    
+    .filter-label {
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 8px 12px;
+        border-radius: 6px;
+    }
+    
+    .filter-label:hover {
+        background: rgba(13, 66, 147, 0.05);
+        color: #0D4293;
+    }
+    
+    .reset-btn {
+        background: linear-gradient(135deg, #f56565, #ed8936);
+        color: white;
+        border: none;
+        padding: clamp(10px, 1.5vw, 12px) clamp(20px, 2.5vw, 25px);
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: auto;
+    }
+    
+    .reset-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(237, 137, 54, 0.3);
+    }
+    
+    /* Results Count */
+    .results-count {
+        text-align: right;
+        padding: clamp(15px, 2vw, 20px) 0;
+    }
+    
+    .results-count h5 {
+        font-size: clamp(1.2rem, 2vw, 1.5rem);
+        color: #1e293b;
+        margin-bottom: 5px;
+    }
+    
+    .results-count .text-primary {
+        background: linear-gradient(135deg, #0D4293, #1a56db);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    /* Partner Cards Grid */
+    .partners-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+        gap: clamp(20px, 3vw, 30px);
+        margin-bottom: clamp(40px, 6vw, 60px);
+    }
+    
+    .partner-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+        position: relative;
+    }
+    
+    .partner-card.animated {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    
+    .partner-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #0D4293, #1a56db);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.6s ease-out;
+    }
+    
+    .partner-card.animated::before {
+        transform: scaleX(1);
+    }
+    
+    .partner-card:hover {
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .partner-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 2;
+        background: linear-gradient(135deg, #0D4293, #1a56db);
+        color: white;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 0 4px 15px rgba(13, 66, 147, 0.3);
+    }
+    
+    .partner-image-container {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .partner-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.8s ease-out;
+    }
+    
+    .partner-card:hover .partner-image {
+        transform: scale(1.08);
+    }
+    
+    .logo-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    }
+    
+    .logo-placeholder i {
+        font-size: 3rem;
+        color: #94a3b8;
+        opacity: 0.5;
+    }
+    
+    .partner-content {
+        padding: clamp(20px, 3vw, 30px);
+    }
+    
+    .partner-category {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(13, 66, 147, 0.08);
+        color: #0D4293;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .partner-card:hover .partner-category {
+        background: rgba(13, 66, 147, 0.12);
+        transform: translateX(5px);
+    }
+    
+    .partner-content h5 {
+        font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+        color: #1e293b;
+        margin-bottom: clamp(10px, 1.5vw, 15px);
+        line-height: 1.4;
+        transition: all 0.4s ease;
+    }
+    
+    .partner-card:hover .partner-content h5 {
+        color: #0D4293;
+    }
+    
+    .partner-content p {
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: clamp(15px, 2vw, 20px);
+        font-size: 0.9rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .partner-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: clamp(15px, 2vw, 20px);
+    }
+    
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #64748b;
+        font-size: 0.85rem;
+    }
+    
+    .meta-item i {
+        color: #0D4293;
+        width: 16px;
+    }
+    
+    .partner-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .preview-btn {
+        background: linear-gradient(135deg, #0D4293, #1a56db);
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .preview-btn:hover {
+        transform: translateX(5px);
+        box-shadow: 0 6px 20px rgba(13, 66, 147, 0.3);
+    }
+    
+    .website-btn {
+        background: transparent;
+        border: 2px solid #e2e8f0;
+        color: #64748b;
+        padding: 6px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+    }
+    
+    .website-btn:hover {
+        background: #0D4293;
+        border-color: #0D4293;
+        color: white;
+        transform: rotate(15deg);
+    }
+    
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: clamp(8px, 1.5vw, 12px);
+        margin: clamp(40px, 6vw, 80px) 0;
+        animation: fadeIn 0.8s ease-out 1s both;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    .page-btn, .next-btn {
+        width: clamp(40px, 5vw, 50px);
+        height: clamp(40px, 5vw, 50px);
+        border-radius: 50%;
+        border: 2px solid #e2e8f0;
+        background: white;
+        color: #64748b;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .page-btn::before, .next-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, #0D4293, #1a56db);
+        border-radius: 50%;
+        transform: scale(0);
+        transition: transform 0.4s ease-out;
+        z-index: 1;
+    }
+    
+    .page-btn span, .next-btn span {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .page-btn:hover, .next-btn:hover {
+        border-color: #0D4293;
+        color: white;
+        transform: translateY(-3px);
+    }
+    
+    .page-btn:hover::before, .next-btn:hover::before {
+        transform: scale(1);
+    }
+    
+    .page-btn.active {
+        border-color: #0D4293;
+        color: white;
+    }
+    
+    .page-btn.active::before {
+        transform: scale(1);
+    }
+    
+    /* No Results */
+    .no-results {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: clamp(60px, 8vw, 100px) 20px;
+    }
+    
+    .no-results i {
+        font-size: 4rem;
+        color: #e2e8f0;
+        margin-bottom: 20px;
+    }
+    
+    .no-results h4 {
+        color: #64748b;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+    
+    .no-results p {
+        color: #94a3b8;
+        margin-bottom: 30px;
+    }
+    
+    /* Modal */
+    .modal-content {
+        border-radius: 20px;
+        overflow: hidden;
+        border: none;
+    }
+    
+    .modal-header {
+        background: linear-gradient(135deg, #0D4293, #1a56db);
+        color: white;
+        border: none;
+        padding: 20px 30px;
+    }
+    
+    .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1100px) {
+        .container00 {
+            flex-direction: column;
+        }
+        
+        .carousel_title h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .gallery-header {
+            height: 50vh;
+            min-height: 300px;
+        }
+        
+        .carousel_title {
+            padding: 1.5rem;
+        }
+        
+        .filter-group {
+            flex-direction: column;
+        }
+        
+        .reset-btn {
+            margin-left: 0;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .results-count {
+            text-align: center;
+            padding-top: 0;
+        }
+        
+        .partner-grid {
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .gallery-header {
+            height: 40vh;
+        }
+        
+        .partner-image-container {
+            height: 180px;
+        }
+        
+        .partner-content {
+            padding: 15px;
+        }
+        
+        .preview-btn {
+            padding: 6px 15px;
+            font-size: 0.8rem;
+        }
+    }
+</style>
+
+<section class="gallery-header animated-section">
+    <div class="carousel-overlay">
+        <div class="carousel_title">
+            <h1>NOS PARTENAIRES</h1>
+            <p class="subtitle">DES ORGANISATIONS QUI SOUTIENNENT NOS ENTREPRISES INNOVANTES</p>
         </div>
     </div>
-    
-    <div class="hero-shape">
-        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 120L1440 0V120H0Z" fill="white"/>
-        </svg>
+    <div class="header-image">
+        <img src="{{ asset('images/DSC_0196 1.png') }}" class="d-block w-100" alt="Partenaires">
     </div>
 </section>
 
-<!-- Section principale -->
-<main class="py-5">
-    <div class="container">
-        <!-- Barre de recherche et filtres -->
-        <div class="row mb-5">
-            <div class="col-12">
-                <div class="search-filter-card card border-0 shadow-sm animate__animated animate__fadeIn">
-                    <div class="card-body p-4">
-                        <div class="row g-4">
-                            <!-- Filtres -->
-                            <div class="col-lg-8">
-                                <div class="d-flex flex-wrap gap-3">
-                                    <div class="dropdown">
-                                        <button class="btn btn-outline-primary dropdown-toggle" 
-                                                type="button" 
-                                                data-bs-toggle="dropdown"
-                                                data-bs-auto-close="outside">
-                                            <i class="fas fa-filter me-2"></i>Type de partenaire
-                                        </button>
-                                        <ul class="dropdown-menu p-3" style="min-width: 250px;">
-                                            <li>
-                                                <div class="form-check mb-2">
-                                                    <input class="form-check-input filter-check" 
-                                                           type="radio" 
-                                                           name="type_filter"
-                                                           id="type-all" 
-                                                           data-type="all" 
-                                                           {{ !request('type') ? 'checked' : '' }}
-                                                           onchange="applyFilter('type', '')">
-                                                    <label class="form-check-label" for="type-all">
-                                                        Tous les types
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            <li><hr class="dropdown-divider"></li>
-                                            <li>
-                                                <div class="form-check mb-2">
-                                                    <input class="form-check-input filter-check" 
-                                                           type="radio" 
-                                                           name="type_filter"
-                                                           id="type-academique" 
-                                                           data-type="academique"
-                                                           {{ request('type') == 'academique' ? 'checked' : '' }}
-                                                           onchange="applyFilter('type', 'academique')">
-                                                    <label class="form-check-label" for="type-academique">
-                                                        <i class="fas fa-graduation-cap text-info me-2"></i>Académiques
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="form-check mb-2">
-                                                    <input class="form-check-input filter-check" 
-                                                           type="radio" 
-                                                           name="type_filter"
-                                                           id="type-financier" 
-                                                           data-type="financier"
-                                                           {{ request('type') == 'financier' ? 'checked' : '' }}
-                                                           onchange="applyFilter('type', 'financier')">
-                                                    <label class="form-check-label" for="type-financier">
-                                                        <i class="fas fa-money-bill-wave text-success me-2"></i>Financiers
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="form-check mb-2">
-                                                    <input class="form-check-input filter-check" 
-                                                           type="radio" 
-                                                           name="type_filter"
-                                                           id="type-technique" 
-                                                           data-type="technique"
-                                                           {{ request('type') == 'technique' ? 'checked' : '' }}
-                                                           onchange="applyFilter('type', 'technique')">
-                                                    <label class="form-check-label" for="type-technique">
-                                                        <i class="fas fa-cogs text-warning me-2"></i>Techniques
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="form-check">
-                                                    <input class="form-check-input filter-check" 
-                                                           type="radio" 
-                                                           name="type_filter"
-                                                           id="type-commercial" 
-                                                           data-type="commercial"
-                                                           {{ request('type') == 'commercial' ? 'checked' : '' }}
-                                                           onchange="applyFilter('type', 'commercial')">
-                                                    <label class="form-check-label" for="type-commercial">
-                                                        <i class="fas fa-store text-primary me-2"></i>Commerciaux
-                                                    </label>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    
-                                    <div class="dropdown">
-                                        <button class="btn btn-outline-info dropdown-toggle" 
-                                                type="button" 
-                                                data-bs-toggle="dropdown">
-                                            <i class="fas fa-building me-2"></i>Entreprise
-                                        </button>
-                                        <ul class="dropdown-menu p-3" style="min-width: 250px; max-height: 300px; overflow-y: auto;">
-                                            <li>
-                                                <div class="form-check mb-2">
-                                                    <input class="form-check-input entreprise-check" 
-                                                           type="radio" 
-                                                           name="entreprise_filter"
-                                                           id="entreprise-all" 
-                                                           value=""
-                                                           {{ !request('entreprise_id') ? 'checked' : '' }}
-                                                           onchange="applyFilter('entreprise_id', '')">
-                                                    <label class="form-check-label" for="entreprise-all">
-                                                        Toutes les entreprises
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            <li><hr class="dropdown-divider"></li>
-                                            @foreach($entreprises as $id => $name)
-                                            <li>
-                                                <div class="form-check mb-2">
-                                                    <input class="form-check-input entreprise-check" 
-                                                           type="radio" 
-                                                           name="entreprise_filter"
-                                                           id="entreprise-{{ $id }}" 
-                                                           value="{{ $id }}"
-                                                           {{ request('entreprise_id') == $id ? 'checked' : '' }}
-                                                           onchange="applyFilter('entreprise_id', '{{ $id }}')">
-                                                    <label class="form-check-label" for="entreprise-{{ $id }}">
-                                                        {{ Str::limit($name, 30) }}
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                    
-                                    @if(request()->anyFilled(['type', 'entreprise_id']))
-                                    <div class="ms-auto">
-                                        <button class="btn btn-outline-danger" onclick="resetAllFilters()">
-                                            <i class="fas fa-times me-2"></i>Effacer les filtres
-                                        </button>
-                                    </div>
-                                    @endif
-                                </div>
-                            </div>
-                            
-                            <!-- Compteur -->
-                            <div class="col-lg-4">
-                                <div class="results-count text-end">
-                                    <h5 class="mb-0">
-                                        <span class="text-primary">{{ $partenaires->total() }}</span> 
-                                        partenaire{{ $partenaires->total() > 1 ? 's' : '' }}
-                                    </h5>
-                                    <p class="text-muted small mb-0">
-                                        @if(request('type'))
-                                        <span class="badge bg-info me-1">{{ ucfirst(request('type')) }}</span>
-                                        @endif
-                                        @if(request('entreprise_id') && isset($entreprises[request('entreprise_id')]))
-                                        <span class="badge bg-primary">{{ $entreprises[request('entreprise_id')] }}</span>
-                                        @endif
-                                    </p>
-                                </div>
-                            </div>
+<div class="container00">
+    <div class="main-content">
+        <!-- Search and Filters -->
+        <div class="search-filter-card">
+            <div class="filter-group">
+                <!-- Type Filter -->
+                <div class="filter-dropdown">
+                    <button class="btn">
+                        <i class="fas fa-filter"></i>
+                        <span>Type de partenaire</span>
+                    </button>
+                    <div class="filter-menu">
+                        <div class="filter-option">
+                            <input type="radio" name="type_filter" id="type-all" value="all" checked class="filter-check">
+                            <label for="type-all" class="filter-label">Tous les types</label>
+                        </div>
+                        <hr>
+                        <div class="filter-option">
+                            <input type="radio" name="type_filter" id="type-academique" value="academique" class="filter-check">
+                            <label for="type-academique" class="filter-label">
+                                <i class="fas fa-graduation-cap text-info me-2"></i>Académiques
+                            </label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="radio" name="type_filter" id="type-financier" value="financier" class="filter-check">
+                            <label for="type-financier" class="filter-label">
+                                <i class="fas fa-money-bill-wave text-success me-2"></i>Financiers
+                            </label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="radio" name="type_filter" id="type-technique" value="technique" class="filter-check">
+                            <label for="type-technique" class="filter-label">
+                                <i class="fas fa-cogs text-warning me-2"></i>Techniques
+                            </label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="radio" name="type_filter" id="type-commercial" value="commercial" class="filter-check">
+                            <label for="type-commercial" class="filter-label">
+                                <i class="fas fa-store text-primary me-2"></i>Commerciaux
+                            </label>
                         </div>
                     </div>
                 </div>
+                
+                <!-- Entreprise Filter -->
+                <div class="filter-dropdown">
+                    <button class="btn">
+                        <i class="fas fa-building"></i>
+                        <span>Entreprise</span>
+                    </button>
+                    <div class="filter-menu" style="max-height: 300px; overflow-y: auto;">
+                        <div class="filter-option">
+                            <input type="radio" name="entreprise_filter" id="entreprise-all" value="" checked class="filter-check">
+                            <label for="entreprise-all" class="filter-label">Toutes les entreprises</label>
+                        </div>
+                        <hr>
+                        @foreach($entreprises as $id => $name)
+                        <div class="filter-option">
+                            <input type="radio" name="entreprise_filter" id="entreprise-{{ $id }}" value="{{ $id }}" class="filter-check">
+                            <label for="entreprise-{{ $id }}" class="filter-label">{{ Str::limit($name, 30) }}</label>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                
+                @if(request()->anyFilled(['type', 'entreprise_id']))
+                <button class="reset-btn" onclick="resetAllFilters()">
+                    <i class="fas fa-times"></i>
+                    <span>Effacer les filtres</span>
+                </button>
+                @endif
+            </div>
+            
+            <!-- Results Count -->
+            <div class="results-count">
+                <h5>
+                    <span class="text-primary">{{ $partenaires->total() }}</span> 
+                    partenaire{{ $partenaires->total() > 1 ? 's' : '' }}
+                </h5>
+                <p style="color: #64748b; font-size: 0.9rem;">
+                    @if(request('type'))
+                    <span style="background: #0ea5e9; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-right: 5px;">
+                        {{ ucfirst(request('type')) }}
+                    </span>
+                    @endif
+                    @if(request('entreprise_id') && isset($entreprises[request('entreprise_id')]))
+                    <span style="background: #0D4293; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem;">
+                        {{ $entreprises[request('entreprise_id')] }}
+                    </span>
+                    @endif
+                </p>
             </div>
         </div>
         
-        <!-- Grille des partenaires -->
-        <div class="row" id="partenairesGrid">
-            @forelse ($partenaires as $partenaire)
-            <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
-                <div class="card h-100 border-0 shadow-sm hover-lift transition-all animate__animated animate__fadeIn">
-                    <!-- Badge type partenaire -->
-                    <div class="card-badge">
-                        @php
-                            $type = $partenaire->meta_data['type'] ?? '';
-                            $typeConfig = [
-                                'academique' => ['color' => 'info', 'icon' => 'fa-graduation-cap', 'label' => 'Académique'],
-                                'financier' => ['color' => 'success', 'icon' => 'fa-money-bill-wave', 'label' => 'Financier'],
-                                'technique' => ['color' => 'warning', 'icon' => 'fa-cogs', 'label' => 'Technique'],
-                                'commercial' => ['color' => 'primary', 'icon' => 'fa-store', 'label' => 'Commercial']
-                            ];
-                            $config = $typeConfig[$type] ?? ['color' => 'secondary', 'icon' => 'fa-handshake', 'label' => 'Partenaire'];
-                        @endphp
-                        <span class="badge bg-{{ $config['color'] }} px-3 py-2">
-                            <i class="fas {{ $config['icon'] }} me-1"></i>{{ $config['label'] }}
-                        </span>
+        <!-- Partners Grid -->
+        <div class="partners-grid" id="partenairesGrid">
+            @forelse ($partenaires as $index => $partenaire)
+            <div class="partner-card animate-on-scroll" data-delay="{{ $index * 100 }}">
+                <!-- Badge type partenaire -->
+                @php
+                    $type = $partenaire->meta_data['type'] ?? '';
+                    $typeConfig = [
+                        'academique' => ['color' => '#0ea5e9', 'icon' => 'fa-graduation-cap', 'label' => 'Académique'],
+                        'financier' => ['color' => '#10b981', 'icon' => 'fa-money-bill-wave', 'label' => 'Financier'],
+                        'technique' => ['color' => '#f59e0b', 'icon' => 'fa-cogs', 'label' => 'Technique'],
+                        'commercial' => ['color' => '#0D4293', 'icon' => 'fa-store', 'label' => 'Commercial']
+                    ];
+                    $config = $typeConfig[$type] ?? ['color' => '#64748b', 'icon' => 'fa-handshake', 'label' => 'Partenaire'];
+                @endphp
+                <div class="partner-badge" style="background: {{ $config['color'] }}">
+                    <i class="fas {{ $config['icon'] }}"></i>
+                    {{ $config['label'] }}
+                </div>
+                
+                <!-- Logo -->
+                <div class="partner-image-container">
+                    @if(isset($partenaire->meta_data['logo']))
+                        <img src="{{ asset('storage/' . $partenaire->meta_data['logo']) }}" 
+                             class="partner-image" 
+                             alt="{{ $partenaire->name }}"
+                             loading="lazy">
+                    @else
+                        <div class="logo-placeholder">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                    @endif
+                </div>
+                
+                <div class="partner-content">
+                    <!-- Entreprise -->
+                    @if($partenaire->parent1)
+                    <div class="partner-category">
+                        <i class="fas fa-building"></i>
+                        {{ $partenaire->parent1->name }}
+                    </div>
+                    @endif
+                    
+                    <!-- Nom -->
+                    <h5>{{ $partenaire->name }}</h5>
+                    
+                    <!-- Description -->
+                    <p>{{ $partenaire->description ?? 'Aucune description disponible.' }}</p>
+                    
+                    <!-- Informations clés -->
+                    <div class="partner-meta">
+                        @if(isset($partenaire->meta_data['contact']))
+                        <div class="meta-item">
+                            <i class="fas fa-user"></i>
+                            <span>{{ Str::limit($partenaire->meta_data['contact'], 30) }}</span>
+                        </div>
+                        @endif
+                        
+                        <div class="meta-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Partenaire depuis {{ $partenaire->created_at->format('m/Y') }}</span>
+                        </div>
                     </div>
                     
-                    <!-- Logo -->
-                    <div class="card-image-container">
-                        @if(isset($partenaire->meta_data['logo']))
-                            <img src="{{ asset('storage/' . $partenaire->meta_data['logo']) }}" 
-                                 class="card-img-top" 
-                                 alt="{{ $partenaire->name }}"
-                                 loading="lazy">
-                        @else
-                            <div class="logo-placeholder d-flex align-items-center justify-content-center">
-                                <i class="fas fa-handshake fa-4x text-muted"></i>
-                            </div>
+                    <!-- Boutons d'action -->
+                    <div class="partner-actions">
+                        <button class="preview-btn" onclick="loadPartenaireModal({{ $partenaire->id }})">
+                            <i class="fas fa-eye"></i>
+                            <span>Aperçu rapide</span>
+                        </button>
+                        
+                        @if(isset($partenaire->meta_data['website']))
+                        <a href="{{ $partenaire->meta_data['website'] }}" 
+                           target="_blank" 
+                           class="website-btn"
+                           title="Site web">
+                            <i class="fas fa-globe"></i>
+                        </a>
                         @endif
-                    </div>
-                    
-                    <div class="card-body">
-                        <!-- Entreprise -->
-                        @if($partenaire->parent1)
-                        <div class="mb-2">
-                            <span class="badge bg-light text-dark border">
-                                <i class="fas fa-building me-1"></i>{{ $partenaire->parent1->name }}
-                            </span>
-                        </div>
-                        @endif
-                        
-                        <!-- Nom -->
-                        <h5 class="card-title fw-bold mb-3 text-primary">
-                            {{ $partenaire->name }}
-                        </h5>
-                        
-                        <!-- Description -->
-                        <p class="card-text text-muted mb-4 line-clamp-3">
-                            {{ $partenaire->description ?? 'Aucune description disponible.' }}
-                        </p>
-                        
-                        <!-- Informations clés -->
-                        <div class="partenaire-meta mb-4">
-                            @if(isset($partenaire->meta_data['contact']))
-                            <div class="d-flex align-items-start mb-2">
-                                <i class="fas fa-user text-info me-2 mt-1"></i>
-                                <small class="text-muted">{{ Str::limit($partenaire->meta_data['contact'], 50) }}</small>
-                            </div>
-                            @endif
-                            
-                            <div class="d-flex align-items-start">
-                                <i class="fas fa-calendar-alt text-warning me-2 mt-1"></i>
-                                <small class="text-muted">Partenaire depuis {{ $partenaire->created_at->format('m/Y') }}</small>
-                            </div>
-                        </div>
-                        
-                        <!-- Boutons d'action -->
-                        <div class="d-flex justify-content-between">
-                            <button class="btn btn-outline-primary btn-sm preview-btn"
-                                    data-id="{{ $partenaire->id }}">
-                                <i class="fas fa-eye me-1"></i> Aperçu rapide
-                            </button>
-                            <div class="partenaire-actions">
-                                @if(isset($partenaire->meta_data['website']))
-                                <a href="{{ $partenaire->meta_data['website'] }}" 
-                                   target="_blank" 
-                                   class="btn btn-outline-secondary btn-sm"
-                                   data-bs-toggle="tooltip"
-                                   title="Site web">
-                                    <i class="fas fa-globe"></i>
-                                </a>
-                                @endif
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
             @empty
             <!-- Aucun résultat -->
-            <div class="col-12">
-                <div class="text-center py-5">
-                    <div class="py-5">
-                        <i class="fas fa-handshake fa-4x text-muted mb-3"></i>
-                        <h4 class="text-muted">Aucun partenaire trouvé</h4>
-                        <p class="text-muted">Essayez avec d'autres critères de recherche ou modifiez vos filtres.</p>
-                        <button class="btn btn-primary" onclick="resetAllFilters()">
-                            <i class="fas fa-redo me-1"></i> Réinitialiser les filtres
-                        </button>
-                    </div>
-                </div>
+            <div class="no-results">
+                <i class="fas fa-handshake"></i>
+                <h4>Aucun partenaire trouvé</h4>
+                <p>Essayez avec d'autres critères de recherche ou modifiez vos filtres.</p>
+                <button class="preview-btn" onclick="resetAllFilters()">
+                    <i class="fas fa-redo"></i>
+                    <span>Réinitialiser les filtres</span>
+                </button>
             </div>
             @endforelse
         </div>
         
         <!-- Pagination -->
         @if($partenaires->hasPages())
-        <div class="row mt-5">
-            <div class="col-12">
-                <nav aria-label="Navigation des partenaires">
-                    <ul class="pagination justify-content-center">
-                        <!-- Premier -->
-                        <li class="page-item {{ $partenaires->onFirstPage() ? 'disabled' : '' }}">
-                            <a class="page-link" href="{{ $partenaires->url(1) }}">
-                                <i class="fas fa-angle-double-left"></i>
-                            </a>
-                        </li>
-                        
-                        <!-- Précédent -->
-                        <li class="page-item {{ $partenaires->onFirstPage() ? 'disabled' : '' }}">
-                            <a class="page-link" href="{{ $partenaires->previousPageUrl() }}">
-                                <i class="fas fa-angle-left"></i>
-                            </a>
-                        </li>
-                        
-                        <!-- Pages -->
-                        @foreach(range(1, $partenaires->lastPage()) as $i)
-                            @if($i >= $partenaires->currentPage() - 2 && $i <= $partenaires->currentPage() + 2)
-                                <li class="page-item {{ $i == $partenaires->currentPage() ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $partenaires->url($i) }}">{{ $i }}</a>
-                                </li>
-                            @endif
-                        @endforeach
-                        
-                        <!-- Suivant -->
-                        <li class="page-item {{ !$partenaires->hasMorePages() ? 'disabled' : '' }}">
-                            <a class="page-link" href="{{ $partenaires->nextPageUrl() }}">
-                                <i class="fas fa-angle-right"></i>
-                            </a>
-                        </li>
-                        
-                        <!-- Dernier -->
-                        <li class="page-item {{ !$partenaires->hasMorePages() ? 'disabled' : '' }}">
-                            <a class="page-link" href="{{ $partenaires->url($partenaires->lastPage()) }}">
-                                <i class="fas fa-angle-double-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                
-                <div class="text-center text-muted small mt-2">
-                    Page {{ $partenaires->currentPage() }} sur {{ $partenaires->lastPage() }} • 
-                    {{ $partenaires->total() }} partenaire{{ $partenaires->total() > 1 ? 's' : '' }}
-                </div>
-            </div>
+        <div class="pagination">
+            <!-- Premier -->
+            @if(!$partenaires->onFirstPage())
+            <button class="page-btn" onclick="window.location.href='{{ $partenaires->url(1) }}'">
+                <i class="fas fa-angle-double-left"></i>
+            </button>
+            @endif
+            
+            <!-- Précédent -->
+            @if(!$partenaires->onFirstPage())
+            <button class="page-btn" onclick="window.location.href='{{ $partenaires->previousPageUrl() }}'">
+                <i class="fas fa-angle-left"></i>
+            </button>
+            @endif
+            
+            <!-- Pages -->
+            @php
+                $current = $partenaires->currentPage();
+                $last = $partenaires->lastPage();
+                $start = max($current - 2, 1);
+                $end = min($current + 2, $last);
+            @endphp
+            
+            @for($i = $start; $i <= $end; $i++)
+                <button class="page-btn {{ $i == $current ? 'active' : '' }}" 
+                        onclick="window.location.href='{{ $partenaires->url($i) }}'">
+                    <span>{{ $i }}</span>
+                </button>
+            @endfor
+            
+            <!-- Suivant -->
+            @if($partenaires->hasMorePages())
+            <button class="page-btn" onclick="window.location.href='{{ $partenaires->nextPageUrl() }}'">
+                <i class="fas fa-angle-right"></i>
+            </button>
+            @endif
+            
+            <!-- Dernier -->
+            @if($partenaires->hasMorePages())
+            <button class="page-btn" onclick="window.location.href='{{ $partenaires->url($last) }}'">
+                <i class="fas fa-angle-double-right"></i>
+            </button>
+            @endif
+        </div>
+        
+        <div style="text-align: center; color: #64748b; font-size: 0.9rem; margin-top: -20px;">
+            Page {{ $partenaires->currentPage() }} sur {{ $partenaires->lastPage() }} • 
+            {{ $partenaires->total() }} partenaire{{ $partenaires->total() > 1 ? 's' : '' }}
         </div>
         @endif
-    
     </div>
-</main>
+</div>
 
 <!-- Modal d'aperçu rapide -->
 <div class="modal fade" id="partenaireModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header">
                 <h5 class="modal-title">
                     <i class="fas fa-handshake me-2"></i>
                     <span id="modalTitle">Détails du partenaire</span>
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-0">
                 <div id="modalContent">
@@ -406,30 +947,57 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialiser les tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
+    // Animation au scroll pour les cartes de partenaires
+    const partnerCards = document.querySelectorAll('.partner-card');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const delay = entry.target.getAttribute('data-delay') || 0;
+                setTimeout(() => {
+                    entry.target.classList.add('animated');
+                }, parseInt(delay));
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
     });
     
-    // Gestion des aperçus rapides
-    document.querySelectorAll('.preview-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const partenaireId = this.getAttribute('data-id');
-            loadPartenaireModal(partenaireId);
+    partnerCards.forEach(card => observer.observe(card));
+    
+    // Animation initiale pour les cartes déjà visibles
+    partnerCards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.8) {
+            const delay = card.getAttribute('data-delay') || 0;
+            setTimeout(() => {
+                card.classList.add('animated');
+            }, parseInt(delay));
+        }
+    });
+    
+    // Gestion des filtres
+    const filterInputs = document.querySelectorAll('.filter-check');
+    filterInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            const filterName = this.name === 'type_filter' ? 'type' : 'entreprise_id';
+            const filterValue = this.value === 'all' || this.value === '' ? '' : this.value;
+            applyFilter(filterName, filterValue);
         });
     });
     
-    // Aperçu rapide au clic sur une carte
-    document.querySelectorAll('.card').forEach(card => {
+    // Click sur les cartes pour ouvrir le modal
+    document.querySelectorAll('.partner-card').forEach(card => {
         const previewBtn = card.querySelector('.preview-btn');
-        if (previewBtn) {
-            card.addEventListener('click', function(e) {
-                if (!e.target.closest('.btn') && !e.target.closest('.partenaire-actions')) {
-                    previewBtn.click();
-                }
-            });
-        }
+        const websiteBtn = card.querySelector('.website-btn');
+        
+        card.addEventListener('click', function(e) {
+            // Ne pas déclencher si on clique sur les boutons d'action
+            if (!e.target.closest('.preview-btn') && !e.target.closest('.website-btn')) {
+                previewBtn.click();
+            }
+        });
     });
 });
 
@@ -464,268 +1032,15 @@ async function loadPartenaireModal(id) {
             document.getElementById('modalTitle').textContent = data.name;
             document.getElementById('modalContent').innerHTML = data.html;
             
-            const modal = new bootstrap.Modal(document.getElementById('partenaireModal'));
+            const modalElement = document.getElementById('partenaireModal');
+            const modal = new bootstrap.Modal(modalElement);
             modal.show();
         }
     } catch (error) {
         console.error('Erreur:', error);
         // Redirection vers la page de détails
-        window.location.href = `/partenaires/${id}`;
+        window.location.href = `/partenaire/${id}`;
     }
 }
 </script>
-
-<style>
-/* Hero Section */
-.hero-banner {
-    min-height: 70vh;
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.hero-image-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
-
-.hero-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 1;
-    filter: brightness(0.8);
-}
-
-.hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(13, 66, 147, 0.85) 0%, rgba(26, 86, 219, 0.75) 100%);
-    z-index: 2;
-}
-
-.hero-content {
-    position: relative;
-    z-index: 3;
-    margin-top: 60px;
-}
-
-.hero-badge {
-    animation-duration: 1s;
-}
-
-.hero-stats .stat-item {
-    padding: 15px 25px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-.hero-shape {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    overflow: hidden;
-    line-height: 0;
-    z-index: 3;
-}
-
-.hero-shape svg {
-    width: calc(100% + 1.3px);
-    height: 120px;
-}
-
-/* Cards */
-.card {
-    border-radius: 15px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    height: 100%;
-}
-
-.card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
-}
-
-.hover-lift:hover {
-    transform: translateY(-5px);
-}
-
-.card-badge {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    z-index: 2;
-}
-
-.card-badge .badge {
-    border-radius: 20px;
-    font-size: 0.8rem;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-}
-
-.card-image-container {
-    height: 200px;
-    overflow: hidden;
-    position: relative;
-}
-
-.card-image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.card:hover .card-image-container img {
-    transform: scale(1.05);
-}
-
-.logo-placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* Pagination */
-.pagination .page-item .page-link {
-    border-radius: 8px;
-    margin: 0 3px;
-    border: none;
-    color: #0D4293;
-    font-weight: 500;
-}
-
-.pagination .page-item.active .page-link {
-    background: linear-gradient(135deg, #0D4293 0%, #1a56db 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(13, 66, 147, 0.3);
-}
-
-.pagination .page-item .page-link:hover {
-    background: rgba(13, 66, 147, 0.1);
-}
-
-/* Modal */
-.modal-content {
-    border-radius: 20px;
-    overflow: hidden;
-}
-
-.modal-header {
-    border-bottom: none;
-    padding: 1.5rem 2rem;
-}
-
-/* CTA Card */
-.cta-card {
-    border-radius: 15px;
-    background: linear-gradient(135deg, #0D4293 0%, #1a56db 100%);
-}
-
-.cta-card .btn-light {
-    border-radius: 10px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.cta-card .btn-light:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(255,255,255,0.2);
-}
-
-/* Filters */
-.search-filter-card {
-    border-radius: 15px;
-}
-
-.dropdown-menu {
-    border-radius: 10px;
-    border: 1px solid rgba(0,0,0,0.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-.form-check-input:checked {
-    background-color: #0D4293;
-    border-color: #0D4293;
-}
-
-.results-count h5 {
-    font-size: 1.5rem;
-}
-
-.results-count .badge {
-    font-size: 0.7rem;
-    padding: 0.3rem 0.7rem;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .hero-banner {
-        min-height: 60vh;
-    }
-    
-    .hero-content h1 {
-        font-size: 2.5rem;
-    }
-    
-    .search-filter-card .card-body {
-        padding: 1.5rem !important;
-    }
-    
-    .card-image-container {
-        height: 180px;
-    }
-    
-    .hero-stats .row {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .hero-stats .col-auto {
-        flex: 0 0 45%;
-        margin-bottom: 10px;
-    }
-}
-
-@media (max-width: 576px) {
-    .hero-content h1 {
-        font-size: 2rem;
-    }
-    
-    .hero-stats .col-auto {
-        flex: 0 0 100%;
-    }
-    
-    .search-filter-card .d-flex {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .cta-card .card-body {
-        padding: 2rem !important;
-    }
-}
-</style>
 @endsection
