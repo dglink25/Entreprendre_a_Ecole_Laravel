@@ -8,8 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class PartenaireController extends Controller
-{
+class PartenaireController extends Controller{
     public function index(){
         try {
             $moduleEae = Module::where('code', 'eae')->firstOrFail();
@@ -68,7 +67,7 @@ class PartenaireController extends Controller
             // Validation
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
-                'type' => 'required|string|in:entreprise_incube,entreprise_alumni,partenaire_strategique,partenaire_financier',
+                'type' => 'required|string|in:partenaire_strategique,partenaire_financier',
                 'description' => 'nullable|string|max:1000',
                 'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'website' => 'nullable|url|max:255',

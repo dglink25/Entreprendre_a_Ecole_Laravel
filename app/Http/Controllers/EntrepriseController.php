@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Storage;
 
 class EntrepriseController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         try {
             // Récupérer le module EAE
             $moduleEae = Module::where('code', 'eae')->firstOrFail();
@@ -35,7 +36,8 @@ class EntrepriseController extends Controller
         }
     }
 
-    public function create(){
+    public function create()
+    {
         try {
             // Récupérer le module EAE
             $moduleEae = Module::where('code', 'eae')->firstOrFail();
@@ -49,11 +51,12 @@ class EntrepriseController extends Controller
 
         } catch (\Exception $e) {
             Log::error("Erreur Create Entreprise : " . $e->getMessage());
-            return back()->with('error', 'Impossible d’accéder à la page de création.');
+            return back()->with('error', 'Impossible d\'accéder à la page de création.');
         }
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         try {
             // Valider les données du formulaire
             $validated = $request->validate([
@@ -118,7 +121,8 @@ class EntrepriseController extends Controller
     /**
      * Page d'édition d'une entreprise.
      */
-    public function edit($id){
+    public function edit($id)
+    {
         try {
             // Récupérer l'entreprise
             $entreprise = Category::findOrFail($id);
@@ -144,7 +148,8 @@ class EntrepriseController extends Controller
     /**
      * Mise à jour d'une entreprise.
      */
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         try {
             // Récupérer l'entreprise
             $entreprise = Category::findOrFail($id);
@@ -223,7 +228,8 @@ class EntrepriseController extends Controller
     /**
      * Suppression d'une entreprise.
      */
-    public function destroy($id){
+    public function destroy($id)
+    {
         try {
             // Récupérer l'entreprise
             $entreprise = Category::findOrFail($id);
@@ -237,6 +243,9 @@ class EntrepriseController extends Controller
             if (isset($entreprise->meta_data['logo'])) {
                 Storage::disk('public')->delete($entreprise->meta_data['logo']);
             }
+
+            // Supprimer les partenaires associés
+            $this->deletePartenaires($id);
 
             // Supprimer l'entreprise
             $entreprise->delete();
@@ -252,9 +261,36 @@ class EntrepriseController extends Controller
     }
 
     /**
+     * Supprime les partenaires associés à une entreprise
+     */
+    private function deletePartenaires($entrepriseId)
+    {
+        try {
+            // Supprimer les partenaires où parent1_id = $entrepriseId
+            $partenaires = Category::where('parent1_id', $entrepriseId)
+                ->where('type', 'partenaire')
+                ->get();
+            
+            foreach ($partenaires as $partenaire) {
+                // Supprimer le logo du partenaire s'il existe
+                if (isset($partenaire->meta_data['logo'])) {
+                    Storage::disk('public')->delete($partenaire->meta_data['logo']);
+                }
+                $partenaire->delete();
+            }
+            
+            Log::info("Partenaires supprimés pour l'entreprise ID: $entrepriseId");
+            
+        } catch (\Exception $e) {
+            Log::error("Erreur lors de la suppression des partenaires: " . $e->getMessage());
+        }
+    }
+
+    /**
      * Afficher les détails d'une entreprise (pour le public)
      */
-    public function show($id){
+    public function show($id)
+    {
         try {
             $entreprise = Category::with('parent1')->findOrFail($id);
             
@@ -262,7 +298,13 @@ class EntrepriseController extends Controller
                 abort(404);
             }
 
-            return view('entreprises.show', compact('entreprise'));
+            // Récupérer les partenaires
+            $partenaires = Category::where('parent1_id', $id)
+                ->where('type', 'partenaire')
+                ->where('is_active', true)
+                ->get();
+
+            return view('entreprises.show', compact('entreprise', 'partenaires'));
 
         } catch (\Exception $e) {
             Log::error("Erreur Show Entreprise : " . $e->getMessage());
@@ -285,11 +327,289 @@ class EntrepriseController extends Controller
                 ->latest()
                 ->paginate(12);
 
-            return view('entreprises.public_index', compact('entreprises'));
+            return view('Entreprise_Cree', compact('entreprises'));
 
         } catch (\Exception $e) {
             Log::error("Erreur Public Index Entreprises : " . $e->getMessage());
             return back()->with('error', 'Impossible de charger les entreprises.');
+        }
+    }
+
+    public function publicPreview($id)
+    {
+        try {
+            $entreprise = Category::with('parent1')->findOrFail($id);
+            
+            if ($entreprise->type !== 'entreprise' || !$entreprise->is_active) {
+                abort(404);
+            }
+
+            // Récupérer les partenaires de la base de données
+            $partenaires = Category::where('parent1_id', $id)
+                ->where('type', 'partenaire')
+                ->where('is_active', true)
+                ->get()
+                ->map(function ($partenaire) {
+                    return [
+                        'nom' => $partenaire->name,
+                        'type' => $partenaire->meta_data['type'] ?? 'Partenaire',
+                        'description' => $partenaire->description ?? 'Partenaire de l\'entreprise',
+                        'logo' => $partenaire->meta_data['logo'] ?? null,
+                        'website' => $partenaire->meta_data['website'] ?? null,
+                        'created_at' => $partenaire->created_at->format('d/m/Y')
+                    ];
+                })
+                ->toArray();
+
+            // Ajouter les partenaires aux métadonnées
+            $meta = $entreprise->meta_data ?? [];
+            $meta['partenaires'] = $partenaires;
+            $entreprise->meta_data = $meta;
+
+            $html = view('partials.entreprise-preview', compact('entreprise'))->render();
+            
+            return response()->json([
+                'success' => true,
+                'name' => $entreprise->name,
+                'html' => $html
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error("Erreur Public Preview Entreprise: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Entreprise non trouvée'
+            ], 404);
+        }
+    }
+
+    public function details()
+    {
+        try {
+            $moduleEae = Module::where('code', 'eae')->firstOrFail();
+            
+            $entreprises = Category::where('module_id', $moduleEae->id)
+                ->where('type', 'entreprise')
+                ->where('is_active', true)
+                ->with('parent1')
+                ->latest()
+                ->paginate(12);
+
+            return view('Entreprise_detail', compact('entreprises'));
+
+        } catch (\Exception $e) {
+            Log::error("Erreur Public Index Entreprises : " . $e->getMessage());
+            return back()->with('error', 'Impossible de charger les entreprises.');
+        }
+    }
+
+    /**
+     * Gestion des partenaires d'une entreprise
+     */
+    public function partenairesIndex($entrepriseId)
+    {
+        try {
+            $entreprise = Category::findOrFail($entrepriseId);
+            
+            if ($entreprise->type !== 'entreprise') {
+                abort(404);
+            }
+
+            $partenaires = Category::where('parent1_id', $entrepriseId)
+                ->where('type', 'partenaire')
+                ->latest()
+                ->paginate(10);
+
+            return view('entreprises.partenaires.index', compact('entreprise', 'partenaires'));
+
+        } catch (\Exception $e) {
+            Log::error("Erreur Partenaires Index: " . $e->getMessage());
+            return back()->with('error', 'Impossible de charger les partenaires.');
+        }
+    }
+
+    public function partenaireCreate($entrepriseId)
+    {
+        try {
+            $entreprise = Category::findOrFail($entrepriseId);
+            
+            if ($entreprise->type !== 'entreprise') {
+                abort(404);
+            }
+
+            return view('entreprises.partenaires.create', compact('entreprise'));
+
+        } catch (\Exception $e) {
+            Log::error("Erreur Partenaire Create: " . $e->getMessage());
+            return back()->with('error', 'Impossible d\'accéder à la page de création.');
+        }
+    }
+
+    public function partenaireStore(Request $request, $entrepriseId)
+    {
+        try {
+            $entreprise = Category::findOrFail($entrepriseId);
+            
+            if ($entreprise->type !== 'entreprise') {
+                abort(404);
+            }
+
+            // Valider les données du formulaire
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'type' => 'required|string|in:academique,financier,technique,commercial',
+                'description' => 'nullable|string|max:1000',
+                'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'website' => 'nullable|url|max:255',
+                'email' => 'nullable|email|max:255',
+                'phone' => 'nullable|string|max:20',
+                'is_active' => 'boolean',
+            ]);
+
+            // Récupérer le module EAE
+            $moduleEae = Module::where('code', 'eae')->firstOrFail();
+
+            // Traitement du logo
+            $logoPath = null;
+            if ($request->hasFile('logo')) {
+                $logoPath = $request->file('logo')->store('entreprises/partenaires/logos', 'public');
+            }
+
+            // Créer le partenaire
+            $partenaire = new Category([
+                'module_id' => $moduleEae->id,
+                'type' => 'partenaire',
+                'name' => $validated['name'],
+                'description' => $validated['description'],
+                'parent1_id' => $entrepriseId,
+                'meta_data' => [
+                    'type' => $validated['type'],
+                    'logo' => $logoPath,
+                    'website' => $validated['website'] ?? null,
+                    'email' => $validated['email'] ?? null,
+                    'phone' => $validated['phone'] ?? null,
+                ],
+                'is_active' => $request->has('is_active'),
+            ]);
+
+            $partenaire->save();
+
+            return redirect()->route('entreprises.partenaires.index', $entrepriseId)
+                ->with('success', 'Partenaire ajouté avec succès.');
+
+        } catch (\Exception $e) {
+            Log::error("Erreur Partenaire Store: " . $e->getMessage());
+            return back()->with('error', 'Une erreur est survenue. Réessayez.')->withInput();
+        }
+    }
+
+    public function partenaireEdit($entrepriseId, $partenaireId)
+    {
+        try {
+            $entreprise = Category::findOrFail($entrepriseId);
+            $partenaire = Category::findOrFail($partenaireId);
+            
+            if ($entreprise->type !== 'entreprise' || $partenaire->type !== 'partenaire' || $partenaire->parent1_id != $entrepriseId) {
+                abort(404);
+            }
+
+            return view('entreprises.partenaires.edit', compact('entreprise', 'partenaire'));
+
+        } catch (\Exception $e) {
+            Log::error("Erreur Partenaire Edit: " . $e->getMessage());
+            return back()->with('error', 'Impossible d\'ouvrir la page d\'édition.');
+        }
+    }
+
+    public function partenaireUpdate(Request $request, $entrepriseId, $partenaireId)
+    {
+        try {
+            $entreprise = Category::findOrFail($entrepriseId);
+            $partenaire = Category::findOrFail($partenaireId);
+            
+            if ($entreprise->type !== 'entreprise' || $partenaire->type !== 'partenaire' || $partenaire->parent1_id != $entrepriseId) {
+                abort(404);
+            }
+
+            // Valider les données du formulaire
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'type' => 'required|string|in:academique,financier,technique,commercial',
+                'description' => 'nullable|string|max:1000',
+                'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'website' => 'nullable|url|max:255',
+                'email' => 'nullable|email|max:255',
+                'phone' => 'nullable|string|max:20',
+                'is_active' => 'boolean',
+                'remove_logo' => 'boolean',
+            ]);
+
+            // Récupérer les métadonnées actuelles
+            $metaData = $partenaire->meta_data ?? [];
+
+            // Gestion du logo
+            if ($request->hasFile('logo')) {
+                // Supprimer l'ancien logo si existant
+                if (isset($metaData['logo'])) {
+                    Storage::disk('public')->delete($metaData['logo']);
+                }
+                // Stocker le nouveau logo
+                $metaData['logo'] = $request->file('logo')->store('entreprises/partenaires/logos', 'public');
+            } elseif ($request->has('remove_logo') && $request->remove_logo == '1') {
+                // Supprimer le logo si demandé
+                if (isset($metaData['logo'])) {
+                    Storage::disk('public')->delete($metaData['logo']);
+                    unset($metaData['logo']);
+                }
+            }
+
+            // Mettre à jour les métadonnées
+            $metaData['type'] = $validated['type'];
+            $metaData['website'] = $validated['website'] ?? null;
+            $metaData['email'] = $validated['email'] ?? null;
+            $metaData['phone'] = $validated['phone'] ?? null;
+
+            // Mettre à jour le partenaire
+            $partenaire->update([
+                'name' => $validated['name'],
+                'description' => $validated['description'],
+                'meta_data' => $metaData,
+                'is_active' => $request->has('is_active'),
+            ]);
+
+            return redirect()->route('entreprises.partenaires.index', $entrepriseId)
+                ->with('success', 'Partenaire modifié avec succès.');
+
+        } catch (\Exception $e) {
+            Log::error("Erreur Partenaire Update: " . $e->getMessage());
+            return back()->with('error', 'Erreur lors de la mise à jour.')->withInput();
+        }
+    }
+
+    public function partenaireDestroy($entrepriseId, $partenaireId)
+    {
+        try {
+            $entreprise = Category::findOrFail($entrepriseId);
+            $partenaire = Category::findOrFail($partenaireId);
+            
+            if ($entreprise->type !== 'entreprise' || $partenaire->type !== 'partenaire' || $partenaire->parent1_id != $entrepriseId) {
+                abort(404);
+            }
+
+            // Supprimer le logo si existant
+            if (isset($partenaire->meta_data['logo'])) {
+                Storage::disk('public')->delete($partenaire->meta_data['logo']);
+            }
+
+            // Supprimer le partenaire
+            $partenaire->delete();
+
+            return redirect()->route('entreprises.partenaires.index', $entrepriseId)
+                ->with('success', 'Partenaire supprimé avec succès.');
+
+        } catch (\Exception $e) {
+            Log::error("Erreur Partenaire Destroy: " . $e->getMessage());
+            return back()->with('error', 'Impossible de supprimer ce partenaire.');
         }
     }
 }

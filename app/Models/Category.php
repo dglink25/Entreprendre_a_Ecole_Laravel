@@ -32,7 +32,13 @@ class Category extends Model
         'date_debut',
         'date_fin',
         'is_active',
+        'meta_data',
     ];
+
+    protected $casts = [
+        'meta_data' => 'array',
+    ];
+
 
     // Relation avec le module
     public function module()

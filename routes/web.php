@@ -39,6 +39,7 @@ Route::get('/contacts', function () {
 
 // Route entreprise publique (séparée de l'admin)
 Route::get('/entreprises', [EntrepriseController::class, 'publicIndex'])->name('entreprises.public');
+Route::get('/entreprises/details', [EntrepriseController::class, 'details'])->name('entreprises_lirePlus');
 Route::get('/entreprises/{entreprise}', [EntrepriseController::class, 'show'])->name('entreprises.show');
 
 // Dashboard et authentification
@@ -75,5 +76,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/entreprises/{entreprise}', [EntrepriseController::class, 'destroy'])->name('entreprises.destroy');
     });
 });
+
+// Dans web.php
+Route::get('/entreprises/{id}/public-preview', [EntrepriseController::class, 'publicPreview'])
+    ->name('entreprises.public-preview');
+
 
 require __DIR__.'/auth.php';
