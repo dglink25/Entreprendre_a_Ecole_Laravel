@@ -140,22 +140,6 @@ class PartenaireController extends Controller{
         }
     }
 
-    public function show($id){
-        try {
-            $partenaire = Category::with('parent1')->findOrFail($id);
-            
-            if ($partenaire->type !== 'partenaire') {
-                abort(404);
-            }
-
-            return view('partenaires.show', compact('partenaire'));
-
-        } catch (\Exception $e) {
-            Log::error("Erreur Show Partenaire : " . $e->getMessage());
-            return back()->with('error', 'Impossible d\'afficher les détails du partenaire.');
-        }
-    }
-
     public function destroy($id) {
         try {
             $partenaire = Category::findOrFail($id);
@@ -243,6 +227,136 @@ class PartenaireController extends Controller{
         } catch (\Exception $e) {
             Log::error("Erreur Update Partenaire : " . $e->getMessage());
             return back()->with('error', 'Erreur lors de la mise à jour.')->withInput();
+        }
+    }
+
+    /**
+     * Liste publique des partenaires
+     */
+    public function publicIndex(Request $request){
+        try {
+            // Récupérer le module EAE
+            $moduleEae = Module::where('code', 'eae')->firstOrFail();
+            
+            // Récupérer les partenaires actifs
+            $query = Category::where('module_id', $moduleEae->id)
+                ->where('type', 'partenaire')
+                ->where('is_active', true)
+                ->with('parent1') // L'entreprise parente
+                ->latest();
+            
+            // Filtrage par type
+            if ($request->has('type') && $request->type) {
+                $query->where('meta_data->type', $request->type);
+            }
+            
+            // Filtrage par entreprise
+            if ($request->has('entreprise_id') && $request->entreprise_id) {
+                $query->where('parent1_id', $request->entreprise_id);
+            }
+            
+            $partenaires = $query->paginate(12);
+            
+            // Statistiques
+            $stats = [
+                'total' => Category::where('module_id', $moduleEae->id)
+                    ->where('type', 'partenaire')
+                    ->where('is_active', true)
+                    ->count(),
+                'academique' => Category::where('module_id', $moduleEae->id)
+                    ->where('type', 'partenaire')
+                    ->where('is_active', true)
+                    ->where('meta_data->type', 'academique')
+                    ->count(),
+                'financier' => Category::where('module_id', $moduleEae->id)
+                    ->where('type', 'partenaire')
+                    ->where('is_active', true)
+                    ->where('meta_data->type', 'financier')
+                    ->count(),
+                'technique' => Category::where('module_id', $moduleEae->id)
+                    ->where('type', 'partenaire')
+                    ->where('is_active', true)
+                    ->where('meta_data->type', 'technique')
+                    ->count(),
+                'commercial' => Category::where('module_id', $moduleEae->id)
+                    ->where('type', 'partenaire')
+                    ->where('is_active', true)
+                    ->where('meta_data->type', 'commercial')
+                    ->count(),
+            ];
+            
+            // Récupérer les entreprises pour le filtre
+            $entreprises = Category::where('module_id', $moduleEae->id)
+                ->where('type', 'entreprise')
+                ->where('is_active', true)
+                ->get()
+                ->mapWithKeys(function ($entreprise) {
+                    return [$entreprise->id => $entreprise->name];
+                });
+            
+            return view('partenaires.public-index', compact('partenaires', 'stats', 'entreprises'));
+
+        } catch (\Exception $e) {
+            Log::error("Erreur Public Index Partenaires : " . $e->getMessage());
+            return back()->with('error', 'Impossible de charger les partenaires.');
+        }
+    }
+    
+    /**
+     * Afficher les détails d'un partenaire
+     */
+    public function show($id){
+        try {
+            $partenaire = Category::with('parent1')->findOrFail($id);
+            
+            if ($partenaire->type !== 'partenaire' || !$partenaire->is_active) {
+                abort(404);
+            }
+            
+            // Récupérer des partenaires similaires
+            $similarPartenaires = Category::where('module_id', $partenaire->module_id)
+                ->where('type', 'partenaire')
+                ->where('is_active', true)
+                ->where('id', '!=', $id)
+                ->when($partenaire->meta_data['type'] ?? null, function($query) use ($partenaire) {
+                    return $query->where('meta_data->type', $partenaire->meta_data['type']);
+                })
+                ->limit(4)
+                ->get();
+            
+            return view('partenaires.show', compact('partenaire', 'similarPartenaires'));
+
+        } catch (\Exception $e) {
+            Log::error("Erreur Show Partenaire : " . $e->getMessage());
+            return back()->with('error', 'Impossible d\'afficher les détails du partenaire.');
+        }
+    }
+    
+    /**
+     * Prévisualisation rapide (pour modal AJAX)
+     */
+    public function publicPreview($id){
+        try {
+            $partenaire = Category::with('parent1')->findOrFail($id);
+            
+            if ($partenaire->type !== 'partenaire' || !$partenaire->is_active) {
+                abort(404);
+            }
+            
+            $html = view('partials.partenaire-preview', compact('partenaire'))->render();
+            
+            return response()->json([
+                'success' => true,
+                'name' => $partenaire->name,
+                'html' => $html
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error("Erreur Public Preview Partenaire: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Partenaire non trouvé'
+            ], 404);
         }
     }
 }

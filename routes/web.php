@@ -47,6 +47,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
 Route::middleware('auth')->group(function () {
     Route::resource('partenaires', PartenaireController::class);
     
@@ -75,6 +76,13 @@ Route::middleware('auth')->group(function () {
         Route::put('/entreprises/{entreprise}', [EntrepriseController::class, 'update'])->name('entreprises.update');
         Route::delete('/entreprises/{entreprise}', [EntrepriseController::class, 'destroy'])->name('entreprises.destroy');
     });
+});
+
+// Routes pour les partenaires (public)
+Route::controller(PartenaireController::class)->group(function () {
+    Route::get('/partenaire', 'publicIndex')->name('partenaires.public');
+    Route::get('/partenaire/{id}', 'show')->name('partenaires.show');
+    Route::get('/partenaire/{id}/preview', 'publicPreview')->name('partenaires.preview');
 });
 
 // Dans web.php

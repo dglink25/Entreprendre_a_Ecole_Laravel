@@ -736,7 +736,7 @@
                             <a class="nav-link {{ request()->routeIs('galeries') ? 'active' : '' }}" href="{{ route('galeries') }}">GALERIES</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('home') }}#partenaires">PARTENAIRES</a>
+                            <a class="nav-link" href="{{ route('partenaires.public') }}">PARTENAIRES</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('contacts') ? 'active' : '' }}" href="{{ route('contacts') }}">CONTACTS</a>
