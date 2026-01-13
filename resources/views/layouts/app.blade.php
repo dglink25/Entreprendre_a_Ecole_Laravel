@@ -14,6 +14,280 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     @stack('styles')
     <style>
+        /* ====== FOOTER CORRECTION COMPLÈTE ET FONCTIONNELLE ====== */
+        footer {
+            background: linear-gradient(135deg, #1e4e95, #0c2465);
+            color: white;
+            width: 100%;
+            padding: 40px 0 20px;
+            margin-top: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Styles pour les icônes FontAwesome dans le footer */
+        .contact-info i {
+            width: 16px;
+            height: 16px;
+            margin-right: 10px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .social-icon i {
+            font-size: 18px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover i {
+            color: #4dabf7;
+        }
+
+        /* Animation spécifique pour les icônes YouTube */
+        .social-icon:nth-child(2):hover i {
+            color: #ff0000;
+        }
+
+        /* Container principal */
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Layout desktop - 4 colonnes */
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Section contact */
+        .footer-section {
+            margin-bottom: 25px;
+        }
+
+        .footer-logo-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-logo-item:hover {
+            transform: scale(1.05);
+        }
+
+        .footer-logo-item img {
+            width: 60px;
+            height: auto;
+            margin-right: 15px;
+        }
+
+        .footer-logo-item h4 {
+            color: white;
+            font-weight: bold;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        /* Informations de contact */
+        .contact-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+        }
+
+        .contact-info img {
+            width: 16px;
+            height: 16px;
+            margin-right: 10px;
+            filter: brightness(0) invert(1);
+        }
+
+        .contact-info a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: #4dabf7;
+        }
+
+        /* Icônes sociales */
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .social-icon img {
+            width: 20px;
+            height: 20px;
+            filter: brightness(0) invert(1);
+        }
+
+        /* Titres des sections */
+        .footer-title {
+            color: #4dabf7;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(77, 171, 247, 0.3);
+        }
+
+        /* Listes */
+        .footer-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-list li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .footer-list li:before {
+            content: "•";
+            color: #4dabf7;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .footer-list a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 3px 0;
+        }
+
+        .footer-list a:hover {
+            color: #4dabf7;
+            transform: translateX(5px);
+        }
+
+        /* Copyright */
+        .footer-copyright {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 20px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+
+        /* ====== RESPONSIVE DESKTOP ====== */
+        @media (min-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 40px;
+            }
+            
+            footer {
+                padding: 60px 0 30px;
+            }
+            
+            .footer-container {
+                padding: 0 40px;
+            }
+        }
+
+        /* ====== RESPONSIVE TABLETTE ====== */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+            }
+            
+            footer {
+                padding: 50px 0 25px;
+            }
+            
+            .footer-container {
+                padding: 0 30px;
+            }
+        }
+
+        /* ====== RESPONSIVE MOBILE ====== */
+        @media (max-width: 767px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            footer {
+                padding: 30px 0 20px;
+            }
+            
+            .footer-container {
+                padding: 0 20px;
+            }
+            
+            .footer-title {
+                text-align: center;
+                font-size: 1.2rem;
+            }
+            
+            .footer-logo-item {
+                justify-content: center;
+                text-align: center;
+                flex-direction: column;
+            }
+            
+            .footer-logo-item img {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .contact-info {
+                justify-content: center;
+            }
+            
+            .social-icons {
+                justify-content: center;
+            }
+            
+            .footer-list {
+                text-align: center;
+            }
+            
+            .footer-list li:before {
+                display: none;
+            }
+            
+            .footer-list li {
+                padding-left: 0;
+            }
+        }
+
+        /* ====== LE RESTE DE VOTRE CSS ORIGINAL (NE PAS MODIFIER) ====== */
         /* Styles pour le header et navigation fixes */
         .sticky-wrapper {
             position: fixed;
@@ -47,7 +321,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: transparent !important; /* Transparent */
+            background: transparent !important;
         }
         
         .logo-left {
@@ -65,7 +339,7 @@
         }
         
         .logo-container1 img {
-            filter: brightness(0) invert(1); /* Rend le logo blanc */
+            filter: brightness(0) invert(1);
         }
         
         /* Header sans arrière-plan sur les logos */
@@ -209,14 +483,14 @@
                 width: 60px !important;
                 margin: 0 5px !important;
                 padding: 5px;
-                background: transparent !important; /* Transparent */
+                background: transparent !important;
                 border-radius: 0 !important;
             }
             
             .logo-container1 img {
                 max-height: 50px;
                 max-width: 50px;
-                filter: brightness(0) invert(1); /* Logo blanc */
+                filter: brightness(0) invert(1);
             }
             
             /* Navigation mobile */
@@ -397,90 +671,21 @@
             }
         }
         
-        /* ====== FOOTER RESPONSIVE ====== */
-        footer {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
-            margin-top: auto;
-        }
-        
-        @media (max-width: 768px) {
-            footer .row {
-                gap: 2rem 0;
-            }
-            
-            footer .col-md-3 {
-                padding-bottom: 2rem;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-            }
-            
-            footer .col-md-3:last-child {
-                border-bottom: none;
-                padding-bottom: 0;
-            }
-            
-            footer h5 {
-                color: #4dabf7;
-                margin-bottom: 1rem;
-                font-size: 1.1rem;
-            }
-            
-            footer ul li {
-                margin-bottom: 0.5rem;
-            }
-            
-            footer a {
-                color: rgba(255,255,255,0.8);
-                transition: color 0.3s ease;
-            }
-            
-            footer a:hover {
-                color: #4dabf7;
-                text-decoration: none;
-            }
-            
-            .underline {
-                background: rgba(255,255,255,0.1);
-                height: 1px;
-                margin: 1.5rem 0;
-            }
-            
-            footer img {
-                max-width: 70px;
-            }
-        }
-        
         /* ====== ANIMATIONS ====== */
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 5px rgba(40, 167, 69, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
-            }
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { box-shadow: 0 0 0 5px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
         }
         
         @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-            }
-            to {
-                transform: translateX(0);
-            }
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
         }
         
         @keyframes blink {
@@ -801,66 +1006,78 @@
         @yield('content')
     </main>
 
-    <!-- Footer -->
-    <footer class="py-4 mt-auto">
-        <div class="container">
-            <div class="row gy-4">
-                <div class="col-md-6 col-lg-3">
-                    <div class="d-flex flex-column align-items-center align-items-lg-start">
-                        <img src="{{ asset('images/0 2.png') }}" alt="Logo INSTI" class="mb-3" style="width: 80px;">
-                        <p class="mb-1 text-center text-lg-start">Lokossa, Agnivedji</p>
-                        <p class="mb-1"><strong>(+229) 22 41 13 66</strong></p>
-                        <p class="mb-2 text-center text-lg-start">"Science et technologie au service de l'homme"</p>
-                        <a href="mailto:instilokossa@gmail.com" class="text-white d-block mb-3">
-                            <strong>instilokossa@gmail.com</strong>
-                        </a>
-                        
-                        <div class="d-flex gap-3 mb-3">
-                            <a href="https://facebook.com" target="_blank" class="text-white">
-                                <img src="{{ asset('icons/facebook.svg') }}" alt="Facebook" class="icon-white" style="width: 35px; height: 35px;">
-                            </a>
-                            <a href="https://youtube.com" target="_blank" class="text-white">
-                                <img src="{{ asset('icons/youtube.svg') }}" alt="YouTube" class="icon-white" style="width: 35px; height: 35px;">
-                            </a>
-                        </div>
-                        
-                        <div class="underline w-100"></div>
-                        <img src="{{ asset('insti.png') }}" alt="Logo INSTI" class="mt-3" style="width: 80px;">
+    <!-- FOOTER CORRIGÉ ET FONCTIONNEL -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Section 1: Contact & Logos -->
+                <div class="footer-section">
+                    <div class="footer-logo-item">
+                        <img src="{{ asset('images/0 2.png')}}" alt="UNSTIM">
+                        <h4>UNSTIM</h4>
                     </div>
+                    <div class="footer-logo-item">
+                        <img src="{{ asset('insti.png')}}" alt="INSTI">
+                        <h4>INSTI</h4>
+                    </div>
+                    
+                    <div class="contact-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <a href="#">Lokossa, Agnivèdji</a>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:+2290121816666">(+229) 21 81 66 66</a>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:instilokossa@gmail.com">instilokossa@gmail.com</a>
+                    </div>
+
+<div class="social-icons">
+    <a href="#" class="social-icon">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+    <a href="#" class="social-icon">
+        <i class="fab fa-youtube"></i>
+    </a>
+</div>
                 </div>
 
-                <div class="col-md-6 col-lg-3">
-                    <h5>NOS RESSOURCES</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white text-decoration-none">Incubateur de startups</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Unité d'application de l'INSTI</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Plateforme E-learning</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Blog officiel de l'INSTI</a></li>
+                <!-- Section 2: Nos Ressources -->
+                <div class="footer-section">
+                    <h3 class="footer-title">Nos Ressources</h3>
+                    <ul class="footer-list">
+                        <li><a href="#">Incubateur de startups</a></li>
+                        <li><a href="#">Unité d'application de L'INSTI</a></li>
+                        <li><a href="#">Plateforme E-learning</a></li>
+                        <li><a href="#">Blog officiel de l'INSTI</a></li>
                     </ul>
                 </div>
 
-                <div class="col-md-6 col-lg-3">
-                    <h5>LIENS UTILES</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white text-decoration-none">Ministère de l'Enseignement Supérieur</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Université Nationale des Sciences</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Institut National Supérieur</a></li>
+                <!-- Section 3: Liens Utiles -->
+                <div class="footer-section">
+                    <h3 class="footer-title">Liens Utiles</h3>
+                    <ul class="footer-list">
+                        <li><a href="https://enseignementsuperieur.gouv.bj/">Ministère de l'enseignement Supérieure et de la Recherche Scientifique</a></li>
+                        <li><a href="#">Unité d'application de L'INSTI</a></li>
                     </ul>
                 </div>
 
-                <div class="col-md-6 col-lg-3">
-                    <h5>NAVIGATION</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white text-decoration-none">Accueil</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">À propos</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Formations</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Actualités</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Contact</a></li>
+                <!-- Section 4: Navigation -->
+                <div class="footer-section">
+                    <h3 class="footer-title">Navigation</h3>
+                    <ul class="footer-list">
+                        <li><a href="{{ route('home') }}">Accueil</a></li>
+                        <li><a href="#">Actualités</a></li>
+                        <li><a href="#">Vie estudiantine</a></li>
+                        <li><a href="#">Recherches & Coopérations</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="text-center mt-4 pt-3 border-top border-white border-opacity-25">
-                <p class="mb-0">INSTI-UNSTIM © 2026</p>
+            
+            <div class="footer-copyright">
+                <p>&copy; {{ date('Y') }} INSTI. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
